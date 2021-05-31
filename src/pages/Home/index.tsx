@@ -7,6 +7,8 @@ import { Container, Content, Input, Row, Select, ViewIcon, ViewSelect, Animation
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ItemSelect from '../../components/ItemSelect';
 import { Animated } from 'react-native';
+import ItemModelo from '../../components/ItemModelo';
+import ItemType from '../../components/ItemType';
 
 interface ValuesAnimated {
     car: Animated.Value;
@@ -15,8 +17,9 @@ interface ValuesAnimated {
 }
 
 const Home: React.FC = () => {
-    const { marcasCarros } = useRequestsContext();
+    const { getModelos, getDetails } = useRequestsContext();
     const [selectMark, setSelectMark] = useState<any>('');
+    const [selectModelo, setSelectModelo] = useState<any>('');
 
     let value = useRef<ValuesAnimated>({
         car: new Animated.Value(0),
@@ -28,10 +31,6 @@ const Home: React.FC = () => {
         moto: false,
         truck: false,
     })
-
-    const styles = () => {
-        return
-    }
 
     const animate = useCallback((type: number) => {
         Animated.timing(value.car, {
@@ -52,9 +51,9 @@ const Home: React.FC = () => {
             useNativeDriver: true,
 
         }).start();
-    },[])
+    }, [])
 
-    const handleSelect = useCallback((type: number) => {
+    const handleSelectType = useCallback((type: number) => {
         animate(type);
         setSelected({
             car: type === 1 ? true : false,
@@ -62,7 +61,7 @@ const Home: React.FC = () => {
             truck: type === 3 ? true : false,
         });
         setSelectMark('');
-    },[]);
+    }, []);
     const renderItem: ListRenderItem<MarcasCarros> = ({ item: marcas }) => {
         return <TouchableOpacity>
             <Text>{marcas.name}</Text>
@@ -77,55 +76,55 @@ const Home: React.FC = () => {
                         outputRange: [0.5, 1]
                     }),
                 }} >
-                    <ViewIcon selected={selected.car} onPress={() => handleSelect(1)}>
+                    <ViewIcon selected={selected.car} onPress={() => handleSelectType(1)}>
                         <Icon name="car-side" size={30} color={selected.car ? "#3b9adb" : "#333"} />
                     </ViewIcon>
                 </AnimationContainer>
 
                 <AnimationContainer style={{
-                    transform: [{
-                        rotate: value.moto.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, 90]
-                        })
-                    }],
                     opacity: value.moto.interpolate({
                         inputRange: [0, 1],
                         outputRange: [0.5, 1]
                     }),
                 }} >
-                    <ViewIcon selected={selected.moto} onPress={() => handleSelect(2)}>
+                    <ViewIcon selected={selected.moto} onPress={() => handleSelectType(2)}>
                         <Icon name="motorcycle" size={30} color={selected.moto ? "#3b9adb" : "#333"} />
                     </ViewIcon>
                 </AnimationContainer>
 
                 <AnimationContainer style={{
-                    transform: [{
-                        rotate: value.truck.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, 90]
-                        })
-                    }],
                     opacity: value.truck.interpolate({
                         inputRange: [0, 1],
                         outputRange: [0.5, 1]
                     }),
                 }} >
-                    <ViewIcon selected={selected.truck} onPress={() => handleSelect(3)}>
+                    <ViewIcon selected={selected.truck} onPress={() => handleSelectType(3)}>
                         <Icon name="truck" size={30} color={selected.truck ? "#3b9adb" : "#333"} />
                     </ViewIcon>
                 </AnimationContainer>
             </Row>
 
             <ViewSelect>
-                <Select onValueChange={(itemValue) => setSelectMark(itemValue)} >
+                <Select onValueChange={(itemValue) => {
+                    setSelectMark(itemValue)
+                    if (itemValue !== '') getModelos(itemValue, selected.car ? "carros" : selected.moto ? "motos" : selected.truck ? "caminhoes" : "");
+                }} selectedValue={selectMark}>
                     <Select.Item value={""} label="Selecione uma marca" />
                     <ItemSelect type={selected.car ? 1 : selected.moto ? 2 : selected.truck ? 3 : 0} />
                 </Select>
 
 
-                <Select >
+                <Select onValueChange={(itemValue) => {
+                    setSelectModelo(itemValue);
+                    if (itemValue !== '') getDetails(selectMark, itemValue, selected.car ? "carros" : selected.moto ? "motos" : selected.truck ? "caminhoes" : "");
+                }} >
                     <Select.Item value="" label="Selecione o modelo" />
+                    {selectMark !== "" && <ItemModelo />}
+                </Select>
+
+                <Select onValueChange={(itemValue) => { }} >
+                    <Select.Item value="" label="Selecione o ano e o tipo" />
+                    {selectMark !== "" && selectModelo !== "" && <ItemType />}
                 </Select>
             </ViewSelect>
         </Content>
