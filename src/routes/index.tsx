@@ -6,11 +6,7 @@ import Details from '../pages/Details';
 const Routes: React.FC = () => {
     const Stack = createStackNavigator();
     const screenOptions: StackNavigationOptions = {
-        headerTitleAlign: "center",
-        headerTintColor: "#fff",
-        headerStyle: {
-            backgroundColor: "#3b9adb"
-        }
+        headerShown: false,
     }
     return <NavigationContainer>
         <Stack.Navigator>

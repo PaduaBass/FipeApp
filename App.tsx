@@ -7,7 +7,7 @@ import GlobalContext from './src/context';
 export default function App() {
   return (
     <GlobalContext>
-      <StatusBar backgroundColor="#3288c1" />
+      <StatusBar backgroundColor="#008B8B" />
       <Routes />
     </GlobalContext>
   );
