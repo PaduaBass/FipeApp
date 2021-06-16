@@ -3,7 +3,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Animated } from 'react-native';
 export const Container = styled.View`
     width: 100%;
-    height: 100vh;
+    height: 100%;
     justify-content: center;
     align-items: center;
 `;
@@ -30,6 +30,8 @@ export const Select = styled(Picker)`
     width: 100%;
     height: 45px;
     margin-bottom: 5px;
+    background: ${props => props.enabled ? "#eee" : "#999"};
+    border-radius: 4px;
 `;
 
 export const ViewSelect = styled.View`
@@ -61,7 +63,7 @@ export const ViewIcon = styled.TouchableOpacity<ViewIcon>`
 
 export const AnimationContainer = styled(Animated.View)`
     height: 80px;
-
+    
 `;
 
 interface LabelProps {

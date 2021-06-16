@@ -29,6 +29,10 @@ const Home: React.FC = () => {
         moto: new Animated.Value(0),
         truck: new Animated.Value(0),
     }).current;
+
+    let firstAnimate = useRef({
+        value: new Animated.Value(0)
+    }).current;
     
     const [selected, setSelected] = useState({
         car: false,
@@ -39,19 +43,19 @@ const Home: React.FC = () => {
     const animate = useCallback((type: number) => {
         Animated.timing(value.car, {
             toValue: type === 1 ? 1 : 0,
-            duration: 500,
+            duration: 300,
             useNativeDriver: true,
 
         }).start();
         Animated.timing(value.moto, {
             toValue: type === 2 ? 1 : 0,
-            duration: 500,
+            duration: 300,
             useNativeDriver: true,
 
         }).start();
         Animated.timing(value.truck, {
             toValue: type === 3 ? 1 : 0,
-            duration: 500,
+            duration: 300,
             useNativeDriver: true,
 
         }).start();
@@ -76,14 +80,13 @@ const Home: React.FC = () => {
                 <Title>CONSULTA PREÇOS DE VEÍCULOS</Title>
                 <Logo source={logo} width={40} height={40} />
             </ViewTitle>
-
             <Row>
                 <AnimationContainer style={{
                     transform: [{
                         translateY: value.car.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [0, -10]
-                        })
+                            outputRange: [0, -5]
+                        }),      
                     }],
                     opacity: value.car.interpolate({
                         inputRange: [0, 1],
@@ -99,7 +102,7 @@ const Home: React.FC = () => {
                     transform: [{
                         translateY: value.moto.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [0, -10]
+                            outputRange: [0, -5]
                         })
                     }],
                     opacity: value.moto.interpolate({
@@ -116,7 +119,7 @@ const Home: React.FC = () => {
                     transform: [{
                         translateY: value.truck.interpolate({
                             inputRange: [0, 1],
-                            outputRange: [0, -10]
+                            outputRange: [0, -5]
                         })
                     }],
                     opacity: value.truck.interpolate({
@@ -166,7 +169,7 @@ const Home: React.FC = () => {
                 <RowPure>
                     <Label selected={detail.name !== undefined}>Preço: </Label>
                     {
-                        selectAnoTipo !== "" && !detail.name ? <ActivityIndicator color="#008B8B" collapsable/> : selectAnoTipo !== "" && detail.name ? <PriceLabel>{detail.preco}</PriceLabel> : null
+                        selectAnoTipo !== "" && !detail.name ? <ActivityIndicator color="#008B8B" collapsable/> : selectAnoTipo !== "" && detail.name ? <PriceLabel>{detail.preco}</PriceLabel> : <PriceLabel>R$ 0,00</PriceLabel>
                     }
                 </RowPure>
 
